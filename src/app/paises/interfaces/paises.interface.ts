@@ -1,3 +1,9 @@
+export interface PaisSmall{
+    name:           string;
+    alpha3Code:     string;
+
+}
+
 export interface Paises {
     name:           string;
     topLevelDomain: string[];
