@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {switchMap, tap} from 'rxjs/operators';
+import { Paises } from '../../interfaces/paises.interface';
 import { PaisesService } from '../../services/paises.service';
 
 @Component({
@@ -10,13 +12,15 @@ import { PaisesService } from '../../services/paises.service';
 export class SelectorComponent implements OnInit {
 
   miFormulario:FormGroup = this.fb.group({
-    region:['',Validators.required]
+    region:['',Validators.required],
+    pais:['',Validators.required],
   })
 
 
   //llenarSelectores
 
   regiones:string[] = [];
+  paises:Paises[] = []
 
   guardar(){
     console.log(this.miFormulario.value)
@@ -28,6 +32,18 @@ export class SelectorComponent implements OnInit {
 
     this.regiones = this.paisesService.regiones;
 
+    //Cuando Cambie la region
+
+    this.miFormulario.get('region')?.valueChanges
+    .pipe(
+      tap((_)=>{
+        this.miFormulario.get('pais').reset('');
+      }),
+      switchMap(region => this.paisesService.getPaisesPorRegion(region)  )
+    )
+    .subscribe(paises => {
+      this.paises = paises
+    })
   }
 
 }
