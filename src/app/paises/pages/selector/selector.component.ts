@@ -23,7 +23,7 @@ export class SelectorComponent implements OnInit {
 
   regiones:string[] = [];
   paises:Paises[] = [];
-  frontera:Paises[] = []
+  frontera:string[] = []
 
   guardar(){
     console.log(this.miFormulario.value)
@@ -52,10 +52,15 @@ export class SelectorComponent implements OnInit {
 
     this.miFormulario.get('pais')?.valueChanges
    
-
+    .pipe(
+      tap((_)=>{
+        this.miFormulario.get('frontera').reset('')
+      }),
+      switchMap(codigo => this.paisesService.getPaisporCodigo(codigo) )
+    )
 
     .subscribe(pais => {
-      console.log(pais)
+      this.frontera = pais?.borders || []
     })
   }
 

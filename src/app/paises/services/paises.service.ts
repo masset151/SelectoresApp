@@ -24,14 +24,14 @@ export class PaisesService {
     return this.http.get<Paises[]>(url)
   }
 
-  getPaisporCodigo(codigo:string):Observable<Paises[]>{
+  getPaisporCodigo(codigo:string):Observable<Paises>{
 
     if(!codigo){
       return of(null)
     }
 
     const url:string = `${this._baseUr}/alpha/${codigo}`
-    return this.http.get<Paises[]>(url)
+    return this.http.get<Paises>(url)
 
   }
 
