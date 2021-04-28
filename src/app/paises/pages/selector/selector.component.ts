@@ -25,6 +25,11 @@ export class SelectorComponent implements OnInit {
   paises:Paises[] = [];
   frontera:string[] = []
 
+
+  //UI
+
+  cargando:boolean = false;
+
   guardar(){
     console.log(this.miFormulario.value)
   }
@@ -41,11 +46,14 @@ export class SelectorComponent implements OnInit {
     .pipe(
       tap((_)=>{
         this.miFormulario.get('pais').reset('');
+        this.cargando = true;
+        
       }),
       switchMap(region => this.paisesService.getPaisesPorRegion(region)  )
     )
     .subscribe(paises => {
       this.paises = paises
+      this.cargando = false
     })
 
     //cuando Cambien el Pais
@@ -54,16 +62,19 @@ export class SelectorComponent implements OnInit {
    
     .pipe(
       tap((_)=>{
-        this.miFormulario.get('frontera').reset('')
+        this.miFormulario.get('frontera').reset('');
+        this.cargando = true;
       }),
       switchMap(codigo => this.paisesService.getPaisporCodigo(codigo) )
     )
 
     .subscribe(pais => {
       this.frontera = pais?.borders || []
+      this.cargando = false
     })
   }
 
+ 
 
 
 }
